@@ -1,6 +1,6 @@
 import jwt
 import datetime
-from rest_framework_jwt.utils import jwt_decode_handler
+
 from .models.user import get_user
 
 
