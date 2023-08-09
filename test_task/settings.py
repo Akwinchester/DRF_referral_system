@@ -13,7 +13,7 @@ from datetime import datetime
 
 import referral_system
 from pathlib import Path
-
+from config import NAME, PORT, PASSWORD, HOST, USER
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,13 +81,13 @@ WSGI_APPLICATION = 'test_task.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_task_db',
-        'USER': 'postgres',
-        'PASSWORD': 'slon106',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME':NAME,
+        'USER':USER,
+        'PASSWORD': PASSWORD},
+        'HOST': HOST,
+        'PORT': PORT,
     }
-}
+
 
 
 # Password validation
