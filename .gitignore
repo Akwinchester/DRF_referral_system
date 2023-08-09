@@ -1,0 +1,45 @@
+# Ignore pycache files
+__pycache__/
+*.py[cod]
+
+# Ignore environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Ignore database files
+*.sqlite3
+
+# Ignore migrations
+migrations/
+
+# Ignore media files
+media/
+
+# Ignore IDE files
+.idea/
+.vscode/
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore temp files
+tmp/
+
+# Ignore static files
+staticfiles/
+
+# Ignore django secret key
+secret_key.py
+
+# Ignore test files
+test_data/
+
+# Ignore tox
+.tox/
+
+# Ignore protected files
+protected/
