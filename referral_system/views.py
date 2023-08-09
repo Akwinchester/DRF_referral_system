@@ -60,6 +60,7 @@ class UserProfileAPIView(APIView):
         user = jwt_authentication(request)
 
         if not user:
+            logger.info(f"({get_current_time()}) UserProfileAPIView\nпользователь не прошел авторизацию")
             return Response({"error": "Unauthorized"}, status=401)
 
         serializer = UserProfileSerializer(request.user)

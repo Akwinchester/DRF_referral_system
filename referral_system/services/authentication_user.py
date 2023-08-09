@@ -83,6 +83,7 @@ def generate_token(user: UserProfile) -> bytes:
 
 # Аутентификация запроса по JWT токену
 def jwt_authentication(request) -> Optional[bool]:
+    logger.info(f"{request.headers}")
     token = request.headers.get('Authorization')
 
     if not token:
@@ -101,7 +102,7 @@ def jwt_authentication(request) -> Optional[bool]:
 # Валидирует JWT токен и возвращает пользователя
 def validate_jwt_token(token: str) -> Optional[UserProfile]:
     try:
-        payload = jwt.decode(jwt=token, key='secret', algorithm='HS256')
+        payload = jwt.decode(jwt=token, key='secret', algorithms=['HS256'])
         user = get_user(user_id=payload['user_id'])
 
         logger.info(f"({get_current_time()}) Успешная валидация токена:{token}")
