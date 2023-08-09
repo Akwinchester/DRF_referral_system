@@ -2,9 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .serializers import UserProfileSerializer
-from .jwt_utils import generate_token, jwt_authentication
 from .services.authentication_user import send_confirmation_code, generate_confirmation_code,\
-    create_user, authenticate_user
+    create_user, authenticate_user, generate_token, jwt_authentication
 from .services.referrals_service import add_referal
 from django.contrib.auth import login
 

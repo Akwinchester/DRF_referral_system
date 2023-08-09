@@ -1,7 +1,9 @@
 # auth_service.py
 import time
 from referral_system.models import UserProfile
-from ..utils import generate_invite_code
+import jwt
+import datetime
+
 
 import random
 import string
@@ -53,3 +55,53 @@ def get_user(user_id=None, phone=None):
 
     except UserProfile.DoesNotExist:
         return None
+
+
+def generate_token(user):
+    payload = {
+        'user_id': user.id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
+    }
+
+    token = jwt.encode(payload, 'secret', algorithm='HS256')
+    return token
+
+
+def jwt_authentication(request):
+    token = request.headers.get('Authorization')
+
+    if not token:
+        return None
+
+    user = validate_jwt_token(token)  # вызов вспомогательной
+
+    if user:
+        request.user = user
+        return True
+
+    return None
+
+
+def validate_jwt_token(token):
+    try:
+        print(token)
+        payload = jwt.decode(jwt=token, key='secret', algorithm='HS256')
+        print(payload)
+    except jwt.ExpiredSignature:
+        return None
+
+    user = get_user(user_id=payload['user_id'])
+
+    if user:
+        return user
+
+    return None
+
+
+def generate_invite_code():
+    length = 6
+
+    char_set = string.ascii_uppercase + string.digits + string.ascii_lowercase
+    invite_code = ''.join(random.sample(char_set * length, length))
+
+    return invite_code
