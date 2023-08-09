@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from datetime import datetime
-
+from config import NAME, HOST, PORT, PASSWORD, USER
 import referral_system
 from pathlib import Path
-from config import NAME, PORT, PASSWORD, HOST, USER
+from config import NAME, PORT, PASSWORD, HOST
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,13 +81,13 @@ WSGI_APPLICATION = 'test_task.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':NAME,
-        'USER':USER,
-        'PASSWORD': PASSWORD},
+        'NAME': NAME,
+        'USER': USER,
+        'PASSWORD': PASSWORD,
         'HOST': HOST,
         'PORT': PORT,
     }
-
+}
 
 
 # Password validation
