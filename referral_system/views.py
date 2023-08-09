@@ -18,7 +18,7 @@ class PhoneNumberAuthView(APIView):
 
         user = create_user(phone)
         code = generate_confirmation_code(user)
-        send_confirmation_code(phone, code)
+        send_confirmation_code()
 
         return Response({
             'message': 'Code sent',
