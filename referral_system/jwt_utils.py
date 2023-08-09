@@ -1,7 +1,7 @@
 import jwt
 import datetime
 
-from .models.user import get_user
+from referral_system.services.authentication_user import get_user
 
 
 def generate_token(user):
@@ -37,7 +37,7 @@ def validate_jwt_token(token):
     except jwt.ExpiredSignature:
         return None
 
-    user = get_user(id=payload['user_id'])
+    user = get_user(user_id=payload['user_id'])
 
     if user:
         return user

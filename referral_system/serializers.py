@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models.models import UserProfile
+from referral_system.models import UserProfile
 
 
 class ReferralUsersSerializer(serializers.ModelSerializer):

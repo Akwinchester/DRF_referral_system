@@ -1,43 +1,33 @@
-import time
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models.models import UserProfile
 from .serializers import UserProfileSerializer
-from .utils import generate_code, generate_invite_code, authenticate_user
 from .jwt_utils import generate_token, jwt_authentication
-
+from .services.authentication_user import send_confirmation_code, generate_confirmation_code,\
+    create_user, authenticate_user
+from .services.referrals_service import add_referal
 from django.contrib.auth import login
 
 
+# Класс для авторизации по номеру телефона
 class PhoneNumberAuthView(APIView):
 
     @staticmethod
     def post(request):
-        phone = request.data["phone"]
+        phone = request.data['phone']
 
-        try:
-            user = UserProfile.objects.get(phone=phone)
-        except UserProfile.DoesNotExist:
-            user = UserProfile.objects.create(
-                phone=phone, invite_code=generate_invite_code()
-            )
+        user = create_user(phone)
+        code = generate_confirmation_code(user)
+        send_confirmation_code(phone, code)
 
-        user.confirmation_code = generate_code()
-        user.save()
-
-        time.sleep(1)
-
-        return Response(
-            {
-                "message": "Confirmation code has been sent",
-                "confirmation_code": user.confirmation_code,
-                "phone": phone,
-            }
-        )
+        return Response({
+            'message': 'Code sent',
+            'confirmation_code': code,
+            'phone': phone,
+        })
 
 
+# Класс для ввода и проверки кода подтверждения
 class VerifyCodeView(APIView):
 
     @staticmethod
@@ -51,10 +41,13 @@ class VerifyCodeView(APIView):
             return Response({"error": "Invalid code"}, status=400)
 
         login(request, user)
+
         token = generate_token(user)
+
         return Response({"token": token, "phone": phone})
 
 
+# Класс для получения профиля пользователя
 class UserProfileAPIView(APIView):
 
     @staticmethod
@@ -68,22 +61,17 @@ class UserProfileAPIView(APIView):
         return Response(serializer.data)
 
 
+# Класс для добавления реферала
 class ReferralAdditionView(APIView):
 
     @staticmethod
     def post(request):
+
         user_status = jwt_authentication(request)
         if user_status:
             invite_code = request.data["invite_code"]
+            response = add_referal(request=request, invite_code=invite_code)
+            return Response(response)
 
-            try:
-                inviting_user = UserProfile.objects.get(invite_code=invite_code)
-            except UserProfile.DoesNotExist:
-                return Response({"error": "Invalid invite code"})
-
-            inviting_user.referred_users.add(request.user)
-            inviting_user.save()
-
-            return Response({"success": "Referrer added"})
         else:
             return Response({"error": "Unauthorized"}, status=401)
