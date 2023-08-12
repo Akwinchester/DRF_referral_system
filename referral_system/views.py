@@ -45,7 +45,6 @@ class VerifyCodeView(APIView):
             return Response({"error": "Invalid code"}, status=400)
 
         login(request, user)
-
         token = generate_token(user)
 
         return Response({"token": token, "phone": phone})
